@@ -91,7 +91,7 @@ export function ProjectSidebar({
                 <div className={`w-3 h-3 rounded-full ${project.color} transition-all duration-200 hover:scale-125`} />
                 <div className="flex-1 text-left min-w-0">
                   <div className="font-medium truncate">{project.name}</div>
-                  <div className="text-xs text-muted-foreground">{project.members.length}명 참여중</div>
+                  <div className="text-xs text-muted-foreground">{project.members?.length || 0}명 참여중</div>
                 </div>
               </div>
             </Button>

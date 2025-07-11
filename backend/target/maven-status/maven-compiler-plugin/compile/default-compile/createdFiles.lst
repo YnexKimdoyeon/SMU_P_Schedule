@@ -1,1 +1,5 @@
+com\teamcollab\backend\security\SecurityConfig.class
+com\teamcollab\backend\TeamCollaborationApplication.class
+com\teamcollab\backend\security\JwtUtil.class
+com\teamcollab\backend\security\JwtAuthenticationFilter.class
 com\teamcollab\backend\controller\ProjectController.class

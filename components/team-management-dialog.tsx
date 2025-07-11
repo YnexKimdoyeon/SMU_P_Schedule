@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Users, Plus, Trash2 } from "lucide-react"
-import type { Project, Member } from "@/app/page"
+import type { Project, Member } from "@/lib/api"
 
 interface TeamManagementDialogProps {
   project: Project
@@ -17,7 +17,7 @@ interface TeamManagementDialogProps {
 }
 
 export function TeamManagementDialog({ project, onUpdateProject }: TeamManagementDialogProps) {
-  const [members, setMembers] = useState(project.members)
+  const [members, setMembers] = useState(project.members || [])
   const [inviteEmail, setInviteEmail] = useState("")
 
   const handleInvite = () => {
@@ -75,7 +75,7 @@ export function TeamManagementDialog({ project, onUpdateProject }: TeamManagemen
           </div>
           <ScrollArea className="h-64">
             <div className="space-y-2 pr-4">
-              {members.map((member) => (
+              {(members || []).map((member) => (
                 <div key={member.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted">
                   <div className="flex items-center gap-3">
                     <Avatar>

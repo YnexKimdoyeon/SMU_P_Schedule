@@ -5,6 +5,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -13,6 +15,8 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
+    
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     
     @Value("${jwt.secret}")
     private String secret;
@@ -40,12 +44,27 @@ public class JwtUtil {
     }
     
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        try {
+            final String username = extractUsername(token);
+            boolean isValid = (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+            logger.info("Token validation - Username: {}, Expected: {}, Valid: {}", 
+                       username, userDetails.getUsername(), isValid);
+            return isValid;
+        } catch (Exception e) {
+            logger.error("Token validation error: {}", e.getMessage());
+            return false;
+        }
     }
     
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            String username = extractClaim(token, Claims::getSubject);
+            logger.info("Extracted username from token: {}", username);
+            return username;
+        } catch (Exception e) {
+            logger.error("Error extracting username from token: {}", e.getMessage());
+            throw e;
+        }
     }
     
     public Date extractExpiration(String token) {

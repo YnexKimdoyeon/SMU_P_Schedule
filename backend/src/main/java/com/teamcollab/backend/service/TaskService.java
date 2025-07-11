@@ -2,8 +2,10 @@ package com.teamcollab.backend.service;
 
 import com.teamcollab.backend.entity.Task;
 import com.teamcollab.backend.entity.User;
+import com.teamcollab.backend.entity.Project;
 import com.teamcollab.backend.repository.TaskRepository;
 import com.teamcollab.backend.repository.UserRepository;
+import com.teamcollab.backend.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class TaskService {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private ProjectRepository projectRepository;
     
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -48,9 +53,14 @@ public class TaskService {
         return taskRepository.findTasksDueBy(dueDate);
     }
     
-    public Task createTask(Task task, Long createdById) {
+    public Task createTask(Task task, Long createdById, Long projectId) {
         User creator = userRepository.findById(createdById)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        
+        // Project 설정
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
+        task.setProject(project);
         
         task.setCreatedBy(creator);
         return taskRepository.save(task);

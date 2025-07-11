@@ -137,14 +137,14 @@ export function TaskCard({ task, onClick, isDragging }: TaskCardProps) {
                   <div className="flex items-center justify-between gap-1">
             <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden">
               <div className="flex -space-x-1 flex-shrink-0">
-                {task.assignees.slice(0, 3).map((assignee, index) => (
+                {(task.assignees || []).slice(0, 3).map((assignee, index) => (
                   <Avatar key={index} className="h-5 w-5 border-2 border-background">
                     <AvatarFallback className="text-xs">{getLastName(assignee)}</AvatarFallback>
                   </Avatar>
                 ))}
-                {task.assignees.length > 3 && (
+                {(task.assignees || []).length > 3 && (
                   <div className="h-5 w-5 rounded-full bg-muted border-2 border-background flex items-center justify-center">
-                    <span className="text-xs">+{task.assignees.length - 3}</span>
+                    <span className="text-xs">+{(task.assignees || []).length - 3}</span>
                   </div>
                 )}
               </div>

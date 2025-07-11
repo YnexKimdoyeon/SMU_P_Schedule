@@ -46,8 +46,11 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     @NotNull
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     private Project project;
+    
+    @Transient
+    private Long projectId;
     
     private LocalDate startDate;
     
@@ -129,6 +132,9 @@ public class Task {
     
     public void setProject(Project project) {
         this.project = project;
+        if (project != null) {
+            this.projectId = project.getId();
+        }
     }
     
     public LocalDate getStartDate() {
@@ -161,6 +167,14 @@ public class Task {
     
     public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
+    }
+    
+    public Long getProjectId() {
+        return projectId != null ? projectId : (project != null ? project.getId() : null);
+    }
+    
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
     
     public User getCreatedBy() {

@@ -49,11 +49,19 @@ public class TaskController {
     }
     
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task, Authentication authentication) {
+    public ResponseEntity<Task> createTask(@RequestBody CreateTaskRequest request, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         
-        Task createdTask = taskService.createTask(task, user.getId());
+        Task task = new Task();
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        task.setStatus(request.getStatus());
+        task.setPriority(request.getPriority());
+        task.setStartDate(request.getStartDate());
+        task.setDueDate(request.getDueDate());
+        
+        Task createdTask = taskService.createTask(task, user.getId(), request.getProjectId());
         return ResponseEntity.ok(createdTask);
     }
     
@@ -118,7 +126,39 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasksDueBy(date));
     }
     
-    // Request DTO
+    // Request DTOs
+    public static class CreateTaskRequest {
+        private String title;
+        private String description;
+        private Task.TaskStatus status;
+        private Task.Priority priority;
+        private LocalDate startDate;
+        private LocalDate dueDate;
+        private Long projectId;
+        
+        // Getters and Setters
+        public String getTitle() { return title; }
+        public void setTitle(String title) { this.title = title; }
+        
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+        
+        public Task.TaskStatus getStatus() { return status; }
+        public void setStatus(Task.TaskStatus status) { this.status = status; }
+        
+        public Task.Priority getPriority() { return priority; }
+        public void setPriority(Task.Priority priority) { this.priority = priority; }
+        
+        public LocalDate getStartDate() { return startDate; }
+        public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+        
+        public LocalDate getDueDate() { return dueDate; }
+        public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+        
+        public Long getProjectId() { return projectId; }
+        public void setProjectId(Long projectId) { this.projectId = projectId; }
+    }
+    
     public static class TaskStatusRequest {
         private Task.TaskStatus status;
         
