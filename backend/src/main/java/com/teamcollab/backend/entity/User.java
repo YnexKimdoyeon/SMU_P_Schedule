@@ -2,6 +2,7 @@ package com.teamcollab.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "users")
@@ -40,6 +42,14 @@ public class User implements UserDetails {
     private Role role = Role.MEMBER;
     
     private boolean enabled = true;
+    
+    @ManyToMany(mappedBy = "members")
+    @JsonIgnore
+    private List<Project> projects = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "assignees")
+    @JsonIgnore
+    private List<Task> assignedTasks = new ArrayList<>();
     
     public enum Role {
         ADMIN, MEMBER
@@ -122,5 +132,21 @@ public class User implements UserDetails {
     
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+    
+    public List<Project> getProjects() {
+        return projects;
+    }
+    
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+    
+    public List<Task> getAssignedTasks() {
+        return assignedTasks;
+    }
+    
+    public void setAssignedTasks(List<Task> assignedTasks) {
+        this.assignedTasks = assignedTasks;
     }
 } 

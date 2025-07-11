@@ -1,5 +1,7 @@
 package com.teamcollab.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -25,10 +27,12 @@ public class Attachment {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
+    @JsonBackReference
     private Task task;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_by")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User uploadedBy;
     
     private LocalDateTime uploadedAt = LocalDateTime.now();

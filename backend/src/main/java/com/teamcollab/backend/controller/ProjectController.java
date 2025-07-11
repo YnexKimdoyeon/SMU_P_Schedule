@@ -5,6 +5,7 @@ import com.teamcollab.backend.entity.User;
 import com.teamcollab.backend.service.ProjectService;
 import com.teamcollab.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjectsByMemberId(user.getId()));
     }
     
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> createProject(@RequestBody Project project, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -51,7 +52,7 @@ public class ProjectController {
         return ResponseEntity.ok(createdProject);
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project projectDetails) {
         try {
             Project updatedProject = projectService.updateProject(id, projectDetails);
